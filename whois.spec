@@ -10,12 +10,33 @@ Source0  : https://github.com/rfc1036/whois/archive/v5.3.2.tar.gz
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : GPL-2.0
+Requires: whois-bin = %{version}-%{release}
 Requires: whois-license = %{version}-%{release}
+Requires: whois-locales = %{version}-%{release}
+Requires: whois-man = %{version}-%{release}
 BuildRequires : pkgconfig(libidn2)
 
 %description
 In 1999 I wrote this Whois client from scratch because the alternatives
 were obsolete or bloated.
+
+%package bin
+Summary: bin components for the whois package.
+Group: Binaries
+Requires: whois-license = %{version}-%{release}
+Requires: whois-man = %{version}-%{release}
+
+%description bin
+bin components for the whois package.
+
+
+%package extras
+Summary: extras components for the whois package.
+Group: Default
+
+%description extras
+extras components for the whois package.
+
 
 %package license
 Summary: license components for the whois package.
@@ -23,6 +44,22 @@ Group: Default
 
 %description license
 license components for the whois package.
+
+
+%package locales
+Summary: locales components for the whois package.
+Group: Default
+
+%description locales
+locales components for the whois package.
+
+
+%package man
+Summary: man components for the whois package.
+Group: Default
+
+%description man
+man components for the whois package.
 
 
 %prep
@@ -33,41 +70,42 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1539035809
+export SOURCE_DATE_EPOCH=1539036497
 make  %{?_smp_mflags} HAVE_LIBIDN2=1 \
 HAVE_ICONV=1 \
 CONFIG_FILE=/etc/whois.conf
 
 %install
-export SOURCE_DATE_EPOCH=1539035809
+export SOURCE_DATE_EPOCH=1539036497
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/whois
 cp COPYING %{buildroot}/usr/share/package-licenses/whois/COPYING
-%make_install BASEDIR=%{buildroot} prefix=%{buildroot}/usr mandir=%{buildroot}/usr/share/man install-whois install-pos
+%make_install BASEDIR=%{buildroot} prefix=/usr
+%find_lang whois
 
 %files
 %defattr(-,root,root,-)
-/builddir/build/BUILDROOT/whois-5.3.2-1.x86_64/usr/bin/mkpasswd
-/builddir/build/BUILDROOT/whois-5.3.2-1.x86_64/usr/bin/whois
-/builddir/build/BUILDROOT/whois-5.3.2-1.x86_64/usr/share/locale/cs/LC_MESSAGES/whois.mo
-/builddir/build/BUILDROOT/whois-5.3.2-1.x86_64/usr/share/locale/da/LC_MESSAGES/whois.mo
-/builddir/build/BUILDROOT/whois-5.3.2-1.x86_64/usr/share/locale/de/LC_MESSAGES/whois.mo
-/builddir/build/BUILDROOT/whois-5.3.2-1.x86_64/usr/share/locale/el/LC_MESSAGES/whois.mo
-/builddir/build/BUILDROOT/whois-5.3.2-1.x86_64/usr/share/locale/es/LC_MESSAGES/whois.mo
-/builddir/build/BUILDROOT/whois-5.3.2-1.x86_64/usr/share/locale/eu/LC_MESSAGES/whois.mo
-/builddir/build/BUILDROOT/whois-5.3.2-1.x86_64/usr/share/locale/fi/LC_MESSAGES/whois.mo
-/builddir/build/BUILDROOT/whois-5.3.2-1.x86_64/usr/share/locale/fr/LC_MESSAGES/whois.mo
-/builddir/build/BUILDROOT/whois-5.3.2-1.x86_64/usr/share/locale/it/LC_MESSAGES/whois.mo
-/builddir/build/BUILDROOT/whois-5.3.2-1.x86_64/usr/share/locale/ja/LC_MESSAGES/whois.mo
-/builddir/build/BUILDROOT/whois-5.3.2-1.x86_64/usr/share/locale/nb/LC_MESSAGES/whois.mo
-/builddir/build/BUILDROOT/whois-5.3.2-1.x86_64/usr/share/locale/pl/LC_MESSAGES/whois.mo
-/builddir/build/BUILDROOT/whois-5.3.2-1.x86_64/usr/share/locale/pt_BR/LC_MESSAGES/whois.mo
-/builddir/build/BUILDROOT/whois-5.3.2-1.x86_64/usr/share/locale/ru/LC_MESSAGES/whois.mo
-/builddir/build/BUILDROOT/whois-5.3.2-1.x86_64/usr/share/locale/zh_CN/LC_MESSAGES/whois.mo
-/builddir/build/BUILDROOT/whois-5.3.2-1.x86_64/usr/share/man/man1/mkpasswd.1
-/builddir/build/BUILDROOT/whois-5.3.2-1.x86_64/usr/share/man/man1/whois.1
-/builddir/build/BUILDROOT/whois-5.3.2-1.x86_64/usr/share/man/man5/whois.conf.5
+
+%files bin
+%defattr(-,root,root,-)
+%exclude /usr/bin/mkpasswd
+/usr/bin/whois
+
+%files extras
+%defattr(-,root,root,-)
+/usr/bin/mkpasswd
+/usr/share/man/man1/mkpasswd.1
 
 %files license
 %defattr(0644,root,root,0755)
 /usr/share/package-licenses/whois/COPYING
+
+%files man
+%defattr(0644,root,root,0755)
+%exclude /usr/share/man/man1/mkpasswd.1
+/usr/share/man/man1/whois.1
+/usr/share/man/man5/whois.conf.5
+
+%files locales -f whois.lang
+%defattr(-,root,root,-)
+

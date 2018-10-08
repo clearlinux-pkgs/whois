@@ -1,1 +1,1 @@
-BASEDIR=%{buildroot} prefix=%{buildroot}/usr mandir=%{buildroot}/usr/share/man install-whois install-pos
+BASEDIR=%{buildroot} prefix=/usr
