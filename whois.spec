@@ -4,7 +4,7 @@
 #
 Name     : whois
 Version  : 5.5.5
-Release  : 10
+Release  : 11
 URL      : https://github.com/rfc1036/whois/archive/v5.5.5/whois-5.5.5.tar.gz
 Source0  : https://github.com/rfc1036/whois/archive/v5.5.5/whois-5.5.5.tar.gz
 Summary  : Intelligent WHOIS client
@@ -70,7 +70,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1579798264
+export SOURCE_DATE_EPOCH=1579802734
 # -Werror is for werrorists
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
@@ -86,7 +86,7 @@ CONFIG_FILE=/etc/whois.conf
 
 
 %install
-export SOURCE_DATE_EPOCH=1579798264
+export SOURCE_DATE_EPOCH=1579802734
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/whois
 cp %{_builddir}/whois-5.5.5/COPYING %{buildroot}/usr/share/package-licenses/whois/4cc77b90af91e615a64ae04893fdffa7939db84c
