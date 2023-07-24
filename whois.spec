@@ -4,10 +4,10 @@
 # Using build pattern: make
 #
 Name     : whois
-Version  : 5.5.17
-Release  : 23
-URL      : https://github.com/rfc1036/whois/archive/v5.5.17/whois-5.5.17.tar.gz
-Source0  : https://github.com/rfc1036/whois/archive/v5.5.17/whois-5.5.17.tar.gz
+Version  : 5.5.18
+Release  : 24
+URL      : https://github.com/rfc1036/whois/archive/v5.5.18/whois-5.5.18.tar.gz
+Source0  : https://github.com/rfc1036/whois/archive/v5.5.18/whois-5.5.18.tar.gz
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : GPL-2.0
@@ -66,15 +66,18 @@ man components for the whois package.
 
 
 %prep
-%setup -q -n whois-5.5.17
-cd %{_builddir}/whois-5.5.17
+%setup -q -n whois-5.5.18
+cd %{_builddir}/whois-5.5.18
+pushd ..
+cp -a whois-5.5.18 buildavx2
+popd
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1683150536
+export SOURCE_DATE_EPOCH=1690215596
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -87,14 +90,28 @@ make  %{?_smp_mflags}  HAVE_LIBIDN2=1 \
 HAVE_ICONV=1 \
 CONFIG_FILE=/etc/whois.conf
 
+pushd ../buildavx2
+export CFLAGS="$CFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3"
+export CXXFLAGS="$CXXFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3"
+export FFLAGS="$FFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3"
+export FCFLAGS="$FCFLAGS -m64 -march=x86-64-v3"
+export LDFLAGS="$LDFLAGS -m64 -march=x86-64-v3"
+make  %{?_smp_mflags}  HAVE_LIBIDN2=1 \
+HAVE_ICONV=1 \
+CONFIG_FILE=/etc/whois.conf
+popd
 
 %install
-export SOURCE_DATE_EPOCH=1683150536
+export SOURCE_DATE_EPOCH=1690215596
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/whois
 cp %{_builddir}/whois-%{version}/COPYING %{buildroot}/usr/share/package-licenses/whois/4cc77b90af91e615a64ae04893fdffa7939db84c || :
+pushd ../buildavx2/
+%make_install_v3 BASEDIR=%{buildroot} prefix=/usr
+popd
 %make_install BASEDIR=%{buildroot} prefix=/usr
 %find_lang whois
+/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
 
 %files
 %defattr(-,root,root,-)
