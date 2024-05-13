@@ -1,5 +1,5 @@
-/builddir/build/BUILDROOT/whois-5.5.22-28.x86_64/etc/:
-/builddir/build/BUILDROOT/whois-5.5.22-28.x86_64/etc/bash_completion.d:
+/etc/:
+/etc/bash_completion.d:
 bash_completion.d
 mkpasswd
 whois
